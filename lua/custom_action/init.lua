@@ -21,9 +21,11 @@ end
 local function create_custom_action()
 	return {
 		title = "My Custom Action",
-		action = function()
-			M.add_custom_comment_action()
-		end,
+		kind = "quickfix",
+		command = {
+			title = "My Custom Action",
+			command = "custom_action.add_custom_comment_action",
+		},
 	}
 end
 
@@ -38,15 +40,16 @@ function M.register_custom_action(client, bufnr)
 		return actions
 	end
 
-	client.config.commands = client.config.commands or {}
-	client.config.commands["CustomCodeAction"] = custom_code_action_handler
+	-- Override the codeAction handler
+	client.handlers["textDocument/codeAction"] = vim.lsp.with(vim.lsp.handlers["textDocument/codeAction"], {
+		code_action_callback = custom_code_action_handler,
+	})
 
-	vim.api.nvim_buf_create_user_command(bufnr, "CustomCodeAction", function()
-		vim.lsp.buf.execute_command({ command = "CustomCodeAction" })
-	end, { range = true, desc = "Run custom code action" })
+	-- Register the command with Neovim
+	vim.api.nvim_buf_create_user_command(bufnr, "AddCustomComment", M.add_custom_comment_action, { range = true })
 end
 
--- Register a custom command
+-- Register a global custom command
 function M.setup()
 	vim.api.nvim_create_user_command("AddCustomComment", M.add_custom_comment_action, { range = true })
 end
