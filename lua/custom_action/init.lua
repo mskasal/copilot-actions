@@ -31,6 +31,10 @@ end
 
 -- Register the custom action with LSP code actions
 function M.register_custom_action(client, bufnr)
+	-- Add a debug print or notification
+	print("register_custom_action called for buffer: " .. bufnr)
+	vim.notify("Custom action registered for buffer: " .. bufnr, vim.log.levels.INFO)
+
 	local function custom_code_action_handler(params)
 		local actions = {}
 		local mode = vim.api.nvim_get_mode().mode
