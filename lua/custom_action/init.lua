@@ -45,4 +45,8 @@ function M.register_custom_action(client, bufnr)
 	client.handlers["textDocument/codeAction"] = vim.lsp.with(custom_code_action_handler, {})
 end
 
+function M.setup()
+	vim.api.nvim_create_user_command("AddCustomComment", M.add_custom_comment_action, { range = true })
+end
+
 return M
