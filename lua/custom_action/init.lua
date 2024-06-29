@@ -36,6 +36,7 @@ function M.register_custom_action(client, bufnr)
 	vim.notify("Custom action registered for buffer: " .. bufnr, vim.log.levels.INFO)
 
 	local function custom_code_action_handler(params)
+		print("custom_code_action_handler called for params: " .. params)
 		local actions = {}
 		local mode = vim.api.nvim_get_mode().mode
 		if mode == "v" or mode == "V" or mode == "\x16" then -- Check if in visual mode
