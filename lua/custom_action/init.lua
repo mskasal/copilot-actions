@@ -22,14 +22,14 @@ function M.setup()
 	-- Define a keymap for <leader>gct to execute custom action
 	vim.api.nvim_set_keymap(
 		"n",
-		"<leader>gct",
+		"<leader>ct",
 		':lua require("custom_action").add_custom_comment_action()<CR>',
 		{ noremap = true, silent = true }
 	)
 
 	-- Optionally, define placeholders for <leader>gce and <leader>gcr
-	vim.api.nvim_set_keymap("n", "<leader>gce", "<Plug>(my_custom_placeholder_for_gce)", {})
-	vim.api.nvim_set_keymap("n", "<leader>gcr", "<Plug>(my_custom_placeholder_for_gcr)", {})
+	vim.api.nvim_set_keymap("n", "<leader>cr", "<Plug>(my_custom_placeholder_for_gce)", {})
+	vim.api.nvim_set_keymap("n", "<leader>ce", "<Plug>(my_custom_placeholder_for_gcr)", {})
 end
 
 return M
