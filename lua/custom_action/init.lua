@@ -17,46 +17,19 @@ function M.add_custom_comment_action()
 	vim.api.nvim_buf_set_lines(bufnr, start_row, end_row, false, lines)
 end
 
--- Function to create a custom code action
-local function create_custom_action()
-	return {
-		title = "My Custom Action",
-		kind = "quickfix",
-		command = {
-			title = "My Custom Action",
-			command = "custom_action.add_custom_comment_action",
-		},
-	}
-end
-
--- Register the custom action with LSP code actions
-function M.register_custom_action(client, bufnr)
-	-- Add a debug print or notification
-	print("register_custom_action called for buffer: " .. bufnr)
-	vim.notify("Custom action registered for buffer: " .. bufnr, vim.log.levels.INFO)
-
-	local function custom_code_action_handler(params)
-		print("custom_code_action_handler called for params: " .. params)
-		local actions = {}
-		local mode = vim.api.nvim_get_mode().mode
-		if mode == "v" or mode == "V" or mode == "\x16" then -- Check if in visual mode
-			table.insert(actions, create_custom_action())
-		end
-		return actions
-	end
-
-	-- Override the codeAction handler
-	client.handlers["textDocument/codeAction"] = vim.lsp.with(vim.lsp.handlers["textDocument/codeAction"], {
-		code_action_callback = custom_code_action_handler,
-	})
-
-	-- Register the command with Neovim
-	vim.api.nvim_buf_create_user_command(bufnr, "AddCustomComment", M.add_custom_comment_action, { range = true })
-end
-
--- Register a global custom command
+-- Setup function to configure keybindings
 function M.setup()
-	vim.api.nvim_create_user_command("AddCustomComment", M.add_custom_comment_action, { range = true })
+	-- Define a keymap for <leader>gct to execute custom action
+	vim.api.nvim_set_keymap(
+		"n",
+		"<leader>gct",
+		':lua require("custom_action").add_custom_comment_action()<CR>',
+		{ noremap = true, silent = true }
+	)
+
+	-- Optionally, define placeholders for <leader>gce and <leader>gcr
+	vim.api.nvim_set_keymap("n", "<leader>gce", "<Plug>(my_custom_placeholder_for_gce)", {})
+	vim.api.nvim_set_keymap("n", "<leader>gcr", "<Plug>(my_custom_placeholder_for_gcr)", {})
 end
 
 return M
